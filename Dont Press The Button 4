@@ -6,22 +6,24 @@ Farm = Library:CreateWindow("Farm")
 function Tween(Pos)
     Distance = (Pos.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
     if game.Players.LocalPlayer.Character.Humanoid.Sit == true then game.Players.LocalPlayer.Character.Humanoid.Sit = false end
-    pcall(function() tween = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(Distance/40, Enum.EasingStyle.Linear),{CFrame = Pos}) end)
+    pcall(function() tween = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(Distance/300, Enum.EasingStyle.Linear),{CFrame = Pos}) end)
     tween:Play()
-    if Distance <= 10 then
-        tween:Cancel()
+    if Distance > 250 then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Pos - Vector3.new(0,-10,0)
     end
 end
 
-Library:CreateToggle(Tabs.Farm, "Auto Farm Pumpkins", false, function(v)
-_G.AutoFarmPumpkins = v
+Library:CreateToggle(Tabs.Farm, "Auto Farm Coins", false, function(v)
+_G.AutoFarmCoins = v
 game:GetService("RunService").RenderStepped:Connect(function()
-if _G.AutoFarmPumpkins then
-for _,v in ipairs(workspace:GetChildren()) do
-if v:IsA("Model") and v:FindFirstChild("Pumpkins"):FindFirstChild("Pumpkin") then
-Tween(v:WaitForChild("Pumpkins"):WaitForChild("Pumpkin"):WaitForChild("Hitbox"))
+if _G.AutoFarmCoins then
+game:GetService("RunService").RenderStepped:Wait(1)
+for _,v in ipairs(workspace:GetDescendants()) do
+if v.Name == "Coin" then
+Tween(v.CFrame)
 end
 end
 end
+game:GetService("RunService").Heartbeat:Wait(1)
 end)
 end)
